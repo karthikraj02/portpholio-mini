@@ -1,0 +1,521 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  .page {
+    min-height: 100vh;
+    background: #030712;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.5rem;
+    font-family: 'Rajdhani', sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,200,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,200,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridDrift 20s linear infinite;
+  }
+
+  @keyframes gridDrift {
+    from { background-position: 0 0; }
+    to { background-position: 40px 40px; }
+  }
+
+  .scanline {
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent, transparent 2px,
+      rgba(0,255,200,0.012) 2px, rgba(0,255,200,0.012) 4px
+    );
+    pointer-events: none;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    max-width: 960px;
+    background: rgba(5, 15, 25, 0.92);
+    border: 1px solid rgba(0,255,200,0.25);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow: hidden;
+    animation: cardIn 0.8s cubic-bezier(0.16,1,0.3,1) both;
+    box-shadow: 0 0 60px rgba(0,255,200,0.07), inset 0 0 60px rgba(0,0,0,0.5);
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #00ffc8, transparent);
+    animation: scanBeam 3s ease-in-out infinite;
+  }
+
+  @keyframes scanBeam {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  .left-panel {
+    flex: 1;
+    padding: 3rem 2.5rem;
+    position: relative;
+    border-right: 1px solid rgba(0,255,200,0.12);
+    animation: fadeLeft 1s 0.3s both;
+  }
+
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .status-bar {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 2rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: #00ffc8;
+    opacity: 0.7;
+  }
+
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #00ffc8;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px #00ffc8; }
+    50% { opacity: 0.3; box-shadow: none; }
+  }
+
+  .avatar-ring {
+    width: 110px; height: 110px;
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  .avatar-ring::before {
+    content: '';
+    position: absolute; inset: -4px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #00ffc8;
+    border-right-color: #00ffc8;
+    animation: spin 3s linear infinite;
+  }
+
+  .avatar-ring::after {
+    content: '';
+    position: absolute; inset: -8px;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    border-bottom-color: rgba(0,255,200,0.3);
+    border-left-color: rgba(0,255,200,0.3);
+    animation: spin 5s linear infinite reverse;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .avatar-img {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(0,255,200,0.3);
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #0a2a1f, #051510);
+    font-family: 'Orbitron', monospace;
+    font-size: 32px;
+    font-weight: 900;
+    color: #00ffc8;
+    letter-spacing: -2px;
+    text-shadow: 0 0 20px rgba(0,255,200,0.6);
+  }
+
+  .name {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    text-shadow: 0 0 20px rgba(255,255,255,0.2);
+  }
+
+  .name span {
+    color: #00ffc8;
+    text-shadow: 0 0 12px rgba(0,255,200,0.8);
+  }
+
+  .degree {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: rgba(0,255,200,0.7);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    border-left: 2px solid #00ffc8;
+    padding-left: 10px;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, #00ffc8, transparent);
+    opacity: 0.2;
+    margin-bottom: 1.8rem;
+  }
+
+  .links-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    color: rgba(0,255,200,0.4);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+
+  .link-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid rgba(0,255,200,0.18);
+    border-radius: 3px;
+    background: rgba(0,255,200,0.03);
+    color: #b0f0e0;
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    margin-bottom: 10px;
+    transition: all 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .link-btn::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: #00ffc8;
+    transform: scaleY(0);
+    transition: transform 0.2s;
+  }
+
+  .link-btn:hover {
+    border-color: rgba(0,255,200,0.5);
+    background: rgba(0,255,200,0.07);
+    color: #00ffc8;
+    transform: translateX(4px);
+  }
+
+  .link-btn:hover::before { transform: scaleY(1); }
+
+  .link-icon {
+    width: 18px; height: 18px; flex-shrink: 0;
+    opacity: 0.8;
+  }
+
+  .link-arrow {
+    margin-left: auto;
+    opacity: 0.4;
+    font-size: 14px;
+  }
+
+  .right-panel {
+    width: 420px;
+    flex-shrink: 0;
+    height: 100%;
+    min-height: 520px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background: radial-gradient(ellipse at 60% 80%, rgba(0,255,200,0.04) 0%, transparent 70%);
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  .desk-scene {
+    position: relative;
+    width: 380px;
+    animation: floatIn 1s 0.5s both;
+  }
+
+  @keyframes floatIn {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .desk-scene svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .corner-deco {
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: #00ffc8;
+    border-style: solid;
+    opacity: 0.5;
+  }
+  .corner-deco.tl { top: 12px; left: 12px; border-width: 1px 0 0 1px; }
+  .corner-deco.tr { top: 12px; right: 12px; border-width: 1px 1px 0 0; }
+  .corner-deco.bl { bottom: 12px; left: 12px; border-width: 0 0 1px 1px; }
+  .corner-deco.br { bottom: 12px; right: 12px; border-width: 0 1px 1px 0; }
+
+  .typing-cursor {
+    display: inline-block;
+    width: 2px; height: 14px;
+    background: #00ffc8;
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+    margin-left: 2px;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .tag-line {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: rgba(0,255,200,0.5);
+    margin-bottom: 1.5rem;
+  }
+
+</style>
+
+<div class="page">
+  <div class="grid-bg"></div>
+  <div class="scanline"></div>
+
+  <div class="card">
+    <div class="corner-deco tl"></div>
+    <div class="corner-deco tr"></div>
+    <div class="corner-deco bl"></div>
+    <div class="corner-deco br"></div>
+
+    <!-- LEFT: Info Panel -->
+    <div class="left-panel">
+      <div class="status-bar">
+        <div class="status-dot"></div>
+        SYSTEM ONLINE &nbsp;·&nbsp; DEV_MODE ACTIVE
+      </div>
+
+      <div class="avatar-ring">
+        <div class="avatar-img">KR</div>
+      </div>
+
+      <div class="name">Karthik <span>Raj</span></div>
+      <div class="degree">MSc Computer Science</div>
+      <div class="tag-line">&gt; Building the future, one commit at a time<span class="typing-cursor"></span></div>
+
+      <div class="divider"></div>
+      <div class="links-label">// Connect</div>
+
+      <a class="link-btn" href="https://github.com/karthikraj02" target="_blank">
+        <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill="#00ffc8"/>
+        </svg>
+        github.com/karthikraj02
+        <span class="link-arrow">↗</span>
+      </a>
+
+      <a class="link-btn" href="https://www.linkedin.com/in/karthik-raj-44ab5126b" target="_blank">
+        <svg class="link-icon" viewBox="0 0 24 24" fill="none">
+          <rect x="2" y="2" width="20" height="20" rx="3" fill="#00ffc8" opacity="0.15"/>
+          <path d="M6.5 9.5h2.5v8H6.5v-8zm1.25-4a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zM10.5 9.5H13v1.1c.4-.7 1.3-1.3 2.5-1.3 2.5 0 3 1.6 3 3.7v4.5H16v-4c0-.9-.3-1.5-1.1-1.5-.8 0-1.4.5-1.4 1.6v3.9h-3v-8z" fill="#00ffc8"/>
+        </svg>
+        linkedin.com/in/karthik-raj
+        <span class="link-arrow">↗</span>
+      </a>
+    </div>
+
+    <!-- RIGHT: Animated Character -->
+    <div class="right-panel">
+      <div class="desk-scene">
+        <svg viewBox="0 0 380 520" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#00ffc8" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#00ffc8" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="screenGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#00cfff" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#0066aa" stop-opacity="0.7"/>
+            </radialGradient>
+            <filter id="neonBlur">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Ambient glow under character -->
+          <ellipse cx="190" cy="480" rx="100" ry="16" fill="url(#glow)" opacity="0.7"/>
+
+          <!-- DESK -->
+          <rect x="40" y="390" width="300" height="14" rx="3" fill="#0d2a1e" stroke="#00ffc8" stroke-width="0.8" stroke-opacity="0.4"/>
+          <rect x="55" y="404" width="10" height="55" rx="2" fill="#0a1f16"/>
+          <rect x="315" y="404" width="10" height="55" rx="2" fill="#0a1f16"/>
+
+          <!-- Keyboard -->
+          <rect x="130" y="376" width="120" height="18" rx="3" fill="#091f15" stroke="#00ffc8" stroke-width="0.6" stroke-opacity="0.4"/>
+          <rect x="135" y="380" width="8" height="5" rx="1" fill="#00ffc8" opacity="0.25"/>
+          <rect x="146" y="380" width="8" height="5" rx="1" fill="#00ffc8" opacity="0.25"/>
+          <rect x="157" y="380" width="8" height="5" rx="1" fill="#00ffc8" opacity="0.25"/>
+          <rect x="168" y="380" width="8" height="5" rx="1" fill="#00ffc8" opacity="0.25"/>
+          <rect x="179" y="380" width="8" height="5" rx="1" fill="#00ffc8" opacity="0.25"/>
+          <rect x="190" y="380" width="8" height="5" rx="1" fill="#00ffc8" opacity="0.25"/>
+          <rect x="201" y="380" width="8" height="5" rx="1" fill="#00ffc8" opacity="0.25"/>
+          <rect x="212" y="380" width="8" height="5" rx="1" fill="#00ffc8" opacity="0.25"/>
+          <rect x="138" y="388" width="104" height="5" rx="1" fill="#00ffc8" opacity="0.15"/>
+
+          <!-- Monitor stand -->
+          <rect x="183" y="310" width="14" height="70" rx="2" fill="#091f15" stroke="#00ffc8" stroke-width="0.5" stroke-opacity="0.3"/>
+          <rect x="165" y="376" width="50" height="6" rx="2" fill="#0a2a1f" stroke="#00ffc8" stroke-width="0.5" stroke-opacity="0.3"/>
+
+          <!-- Monitor body -->
+          <rect x="90" y="180" width="200" height="135" rx="6" fill="#050f0a" stroke="#00ffc8" stroke-width="1.2" stroke-opacity="0.5"/>
+          <!-- Screen inner -->
+          <rect x="97" y="187" width="186" height="121" rx="3" fill="#010d09"/>
+
+          <!-- Screen content - code lines -->
+          <rect x="104" y="195" width="60" height="4" rx="1" fill="#00ffc8" opacity="0.7"/>
+          <rect x="110" y="203" width="45" height="3" rx="1" fill="#00cfff" opacity="0.5"/>
+          <rect x="116" y="210" width="80" height="3" rx="1" fill="#00ffc8" opacity="0.35"/>
+          <rect x="110" y="217" width="55" height="3" rx="1" fill="#00cfff" opacity="0.4"/>
+          <rect x="116" y="224" width="70" height="3" rx="1" fill="#00ffc8" opacity="0.3"/>
+          <rect x="104" y="231" width="30" height="3" rx="1" fill="#00ffc8" opacity="0.6"/>
+          <rect x="110" y="238" width="90" height="3" rx="1" fill="#00cfff" opacity="0.35"/>
+          <rect x="116" y="245" width="50" height="3" rx="1" fill="#00ffc8" opacity="0.25"/>
+          <rect x="110" y="252" width="40" height="3" rx="1" fill="#00ffc8" opacity="0.45"/>
+          <rect x="104" y="259" width="25" height="3" rx="1" fill="#00ffc8" opacity="0.6"/>
+          <!-- Blinking cursor on screen -->
+          <rect x="132" y="259" width="2" height="9" rx="0.5" fill="#00ffc8" opacity="0.9">
+            <animate attributeName="opacity" values="0.9;0;0.9" dur="1s" repeatCount="indefinite"/>
+          </rect>
+
+          <!-- Screen glow reflection -->
+          <ellipse cx="190" cy="320" rx="80" ry="8" fill="#00cfff" opacity="0.04"/>
+
+          <!-- CHAIR back -->
+          <rect x="148" y="280" width="84" height="80" rx="8" fill="#071810" stroke="#00ffc8" stroke-width="0.8" stroke-opacity="0.35"/>
+          <!-- Chair cushion -->
+          <rect x="145" y="354" width="90" height="24" rx="5" fill="#071810" stroke="#00ffc8" stroke-width="0.8" stroke-opacity="0.3"/>
+          <!-- Chair arm left -->
+          <rect x="138" y="340" width="12" height="28" rx="4" fill="#091f15" stroke="#00ffc8" stroke-width="0.5" stroke-opacity="0.25"/>
+          <!-- Chair arm right -->
+          <rect x="230" y="340" width="12" height="28" rx="4" fill="#091f15" stroke="#00ffc8" stroke-width="0.5" stroke-opacity="0.25"/>
+
+          <!-- CHARACTER - Body -->
+          <!-- Torso (hoodie) -->
+          <rect x="162" y="300" width="56" height="58" rx="10" fill="#0d3326"/>
+          <!-- Hoodie details -->
+          <path d="M190 300 L190 358" stroke="#00ffc8" stroke-width="0.8" stroke-opacity="0.3"/>
+          <path d="M175 305 Q190 315 205 305" stroke="#00ffc8" stroke-width="1" fill="none" stroke-opacity="0.4"/>
+
+          <!-- Left arm (on keyboard) -->
+          <path d="M162 320 Q145 335 148 358" stroke="#0d3326" stroke-width="18" stroke-linecap="round" fill="none"/>
+          <!-- Left hand -->
+          <ellipse cx="149" cy="362" rx="8" ry="6" fill="#c8a882"/>
+
+          <!-- Right arm (on keyboard) -->
+          <path d="M218 320 Q235 335 232 358" stroke="#0d3326" stroke-width="18" stroke-linecap="round" fill="none"/>
+          <!-- Right hand -->
+          <ellipse cx="231" cy="362" rx="8" ry="6" fill="#c8a882"/>
+
+          <!-- Neck -->
+          <rect x="183" y="282" width="14" height="22" rx="4" fill="#c8a882"/>
+
+          <!-- Head -->
+          <ellipse cx="190" cy="265" rx="28" ry="30" fill="#c8a882"/>
+
+          <!-- Hair -->
+          <path d="M163 258 Q165 230 190 228 Q215 230 217 258 Q210 242 190 240 Q170 242 163 258Z" fill="#1a0a00"/>
+          <!-- Hair highlight -->
+          <path d="M170 240 Q180 234 190 233" stroke="#3a2010" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+          <!-- Eyes (looking at screen) -->
+          <ellipse cx="180" cy="262" rx="5" ry="5.5" fill="#1a0a00"/>
+          <ellipse cx="200" cy="262" rx="5" ry="5.5" fill="#1a0a00"/>
+          <!-- Eye shine -->
+          <circle cx="182" cy="260" r="1.5" fill="white" opacity="0.7"/>
+          <circle cx="202" cy="260" r="1.5" fill="white" opacity="0.7"/>
+          <!-- Screen reflection in eyes -->
+          <ellipse cx="179" cy="263" rx="2" ry="1.5" fill="#00cfff" opacity="0.25"/>
+          <ellipse cx="199" cy="263" rx="2" ry="1.5" fill="#00cfff" opacity="0.25"/>
+
+          <!-- Eyebrows (focused/concentrating) -->
+          <path d="M174 254 Q180 251 186 253" stroke="#1a0a00" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M194 253 Q200 251 206 254" stroke="#1a0a00" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+          <!-- Nose -->
+          <path d="M188 268 Q190 273 192 268" stroke="#b89060" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+
+          <!-- Slight smile (in flow state) -->
+          <path d="M183 276 Q190 281 197 276" stroke="#9a7040" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+          <!-- Glasses (developer!) -->
+          <rect x="173" y="257" width="13" height="10" rx="3" fill="none" stroke="#2a3a4a" stroke-width="1.5" opacity="0.7"/>
+          <rect x="194" y="257" width="13" height="10" rx="3" fill="none" stroke="#2a3a4a" stroke-width="1.5" opacity="0.7"/>
+          <path d="M186 262 L194 262" stroke="#2a3a4a" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+          <path d="M173 262 L169 261" stroke="#2a3a4a" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+          <path d="M207 262 L211 261" stroke="#2a3a4a" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+
+          <!-- Headphones -->
+          <path d="M163 265 Q163 235 190 232 Q217 235 217 265" stroke="#152b1e" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <rect x="157" y="262" width="10" height="14" rx="4" fill="#152b1e" stroke="#00ffc8" stroke-width="0.8" stroke-opacity="0.5"/>
+          <rect x="213" y="262" width="10" height="14" rx="4" fill="#152b1e" stroke="#00ffc8" stroke-width="0.8" stroke-opacity="0.5"/>
+
+          <!-- Floating code particles -->
+          <text x="60" y="220" font-size="10" fill="#00ffc8" opacity="0.3" font-family="monospace">&lt;/&gt;</text>
+          <text x="290" y="230" font-size="9" fill="#00cfff" opacity="0.25" font-family="monospace">{ }</text>
+          <text x="50" y="300" font-size="8" fill="#00ffc8" opacity="0.2" font-family="monospace">fn()</text>
+          <text x="305" y="310" font-size="8" fill="#00cfff" opacity="0.2" font-family="monospace">var</text>
+
+          <!-- Particles animate -->
+          <circle cx="70" cy="170" r="2" fill="#00ffc8" opacity="0.4">
+            <animate attributeName="cy" values="170;140;170" dur="3s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.4;0.1;0.4" dur="3s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="310" cy="180" r="1.5" fill="#00cfff" opacity="0.3">
+            <animate attributeName="cy" values="180;155;180" dur="4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.3;0.05;0.3" dur="4s" repeatCount="indefinite"/>
+          </circle>
+          <circle cx="100" cy="380" r="1.5" fill="#00ffc8" opacity="0.25">
+            <animate attributeName="cy" values="380;360;380" dur="5s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- Typing animation on character's hands -->
+          <animateTransform attributeName="transform" type="translate" values="0,0;0,-1;0,0" dur="0.3s" repeatCount="indefinite" additive="sum"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
