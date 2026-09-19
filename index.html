@@ -948,6 +948,36 @@
       display: none;
     }
   }
+
+  /* --- fit-to-screen: desktop shows everything at once, no scrolling --- */
+  .fit {
+    width: 100%;
+    max-width: 960px;
+    transform-origin: center center;
+  }
+
+  @media (min-width: 821px) {
+
+    html,
+    body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .page {
+      height: 100vh;
+      height: 100dvh;
+      min-height: 0;
+      padding: 0;
+    }
+
+    /* JS scales this fixed-size block up or down to fill the display */
+    .fit {
+      width: 960px;
+      max-width: none;
+      flex: none;
+    }
+  }
 </style>
 </head>
 <body>
@@ -957,7 +987,7 @@
   <div class="scanline"></div>
   <div class="cursor-glow" aria-hidden="true"></div>
 
-  <div class="stage"><div class="tilt"><div class="card">
+  <div class="fit"><div class="stage"><div class="tilt"><div class="card">
     <div class="spot"></div>
     <div class="corner-deco tl"></div>
     <div class="corner-deco tr"></div>
@@ -1201,7 +1231,7 @@
         </svg>
       </div>
     </div>
-  </div></div></div>
+  </div></div></div></div>
 </div>
 
 <script>
@@ -1212,6 +1242,23 @@
     var $ = function (s) { return document.querySelector(s); };
     var lerp = function (a, b, t) { return a + (b - a) * t; };
     var clamp = function (v, lo, hi) { return Math.max(lo, Math.min(hi, v)); };
+
+    /* ---------- fit the whole card to the desktop display (no scrolling) ---------- */
+    var fit = $('.fit'), fitScale = 1;
+    var desk = window.matchMedia('(min-width: 821px)');
+    function fitToScreen() {
+      if (!fit) return;
+      if (!desk.matches) { fit.style.transform = ''; fitScale = 1; return; }
+      var pad = 24;
+      var s = Math.min((window.innerWidth - pad * 2) / fit.offsetWidth, (window.innerHeight - pad * 2) / fit.offsetHeight);
+      fitScale = clamp(s, 0.4, 1.6);
+      fit.style.transform = 'scale(' + fitScale.toFixed(4) + ')';
+    }
+    fitToScreen();
+    window.addEventListener('resize', fitToScreen);
+    window.addEventListener('load', fitToScreen);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitToScreen);
+    if (window.ResizeObserver && fit) new ResizeObserver(fitToScreen).observe(fit);
 
     /* ---------- video: autoplay can be blocked inside SVG foreignObject ---------- */
     var vid = $('.desk-scene video');
@@ -1237,8 +1284,8 @@
       var nx = clamp((e.clientX - (r.left + r.width / 2)) / (window.innerWidth / 2), -1, 1);
       var ny = clamp((e.clientY - (r.top + r.height / 2)) / (window.innerHeight / 2), -1, 1);
       tilt.style.transform = 'rotateX(' + (-ny * 3.5).toFixed(2) + 'deg) rotateY(' + (nx * 4.5).toFixed(2) + 'deg)';
-      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      card.style.setProperty('--mx', ((e.clientX - r.left) / fitScale) + 'px');
+      card.style.setProperty('--my', ((e.clientY - r.top) / fitScale) + 'px');
     }, { passive: true });
 
     document.documentElement.addEventListener('pointerleave', function () {
